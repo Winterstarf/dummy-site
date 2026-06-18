@@ -1,11 +1,11 @@
 {
-  "name": "purga.pw Dummy Website",
-  "short_name": "purga.pw Dummy",
+  "name": "A dummy website",
+  "short_name": "A dummy website",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0c0c0c",
   "theme_color": "#0c0c0c",
-  "description": "Dummy website",
+  "description": "A dummy website",
   "icons": [
     {
       "src": "assets/icons/wrench.png",
