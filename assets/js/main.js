@@ -26,13 +26,13 @@ triggerFlicker();
 
 // Footer domain grabber
 function updateFooterSlug() {
-    const hostname = window.location.hostname || "localhost";
-    const domainFirstPart = hostname.split('.')[0].toLowerCase();
     const footerElement = document.getElementById('sys-footer-slug');
+    if (!footerElement) return;
     
-    if (footerElement) {
-        footerElement.innerHTML = `&copy; purga.pw | ${domainFirstPart} `;
-    }
+    const rawHost = footerElement.dataset.host || window.location.hostname || "localhost";
+    const domainFirstPart = rawHost.split('.')[0].toLowerCase();
+    
+    footerElement.innerHTML = `&copy; purga.pw | ${domainFirstPart}`;
 }
 updateFooterSlug();
 
