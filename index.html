@@ -52,14 +52,7 @@
                     <a href="https://purga.pw" rel="nofollow noreferrer">ROOT</a>
                     <a href="mailto:meow@purga.pw">EMAIL</a>
                 </div>
-                
-                {{ $reqHost := host .Req.Host }}
-                {{ $isIp := regexMatch "^[0-9.:]+$" $reqHost }}
-                <p id="sys-footer-slug" 
-                   data-host="{{ if $isIp }}<NODE_DOMAIN>{{ else }}{{ $reqHost }}{{ end }}" 
-                   style="color: #555; margin-top: 10px; margin-bottom: 0;">
-                    &copy; purga.pw | Loading...
-                </p>
+                <p id="sys-footer-slug" style="color: #555; margin-top: 10px; margin-bottom: 0;">&copy; purga.pw | Loading...</p>
             </div>
 
             <a href="https://ynoproject.net" target="_blank" rel="noopener noreferrer">
