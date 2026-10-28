@@ -26,12 +26,26 @@ triggerFlicker();
 
 // Footer domain grabber
 function updateFooterSlug() {
-    const hostname = window.location.hostname || "localhost";
-    const domainFirstPart = hostname.split('.')[0].toLowerCase();
+    const rawHostname = window.location.hostname || "localhost";
+    // Strip surrounding brackets in case IPv6 is formatted as [::1]
+    const hostname = rawHostname.replace(/^\[|\]$/g, '');
     const footerElement = document.getElementById('sys-footer-slug');
-    
+
+    // Matches standard IPv4 addresses (0.0.0.0 to 255.255.255.255)
+    const ipv4Regex = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
+
+    // Matches IPv6 addresses (full, compressed '::', and loopback)
+    const ipv6Regex = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
+
+    const isIpAddress = ipv4Regex.test(hostname) || ipv6Regex.test(hostname);
+
     if (footerElement) {
-        footerElement.innerHTML = `&copy; purga.pw | ${domainFirstPart} `;
+        if (isIpAddress) {
+            footerElement.innerHTML = `&copy; purga.pw | no valid hostname (likely a relay)`;
+        } else {
+            const domainFirstPart = hostname.split('.')[0].toLowerCase();
+            footerElement.innerHTML = `&copy; purga.pw | ${domainFirstPart} `;
+        }
     }
 }
 updateFooterSlug();
