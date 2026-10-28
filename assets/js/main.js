@@ -53,16 +53,32 @@ updateFooterSlug();
 // IP & Country display
 async function fetchIPData() {
     const ipElement = document.getElementById('sys-ip');
+    if (!ipElement) return;
+
     try {
+        // GeoJS
         const response = await fetch('https://get.geojs.io/v1/ip/geo.json');
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) throw new Error('GeoJS network response was not ok');
         const data = await response.json();
             
         ipElement.textContent = `${data.ip} [${data.country_code}]`;
-    } catch (error) {
-        console.error("IP Lookup failed:", error);
-        ipElement.textContent = "FAILED [LOCAL?]";
-        ipElement.style.color = "#ff4444";
+        
+    } catch (primaryError) {
+        console.warn("Primary IP API failed, trying fallback...", primaryError.message);
+        
+        try {
+            // ipwho.is fallback
+            const fallbackResponse = await fetch('https://ipwho.is/');
+            if (!fallbackResponse.ok) throw new Error('Fallback network response was not ok');
+            const fallbackData = await fallbackResponse.json();
+            
+            ipElement.textContent = `${fallbackData.ip} [${fallbackData.country_code}]`;
+            
+        } catch (fallbackError) {
+            console.error("All IP Lookups failed (likely blocked by privacy extensions):", fallbackError.message);
+            ipElement.textContent = "FAILED [BLOCKED/LOCAL]";
+            ipElement.style.color = "#ff4444";
+        }
     }
 }
-fetchIPData();
+document.addEventListener("DOMContentLoaded", fetchIPData);
