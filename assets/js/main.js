@@ -56,29 +56,17 @@ async function fetchIPData() {
     if (!ipElement) return;
 
     try {
-        // ip-api.com
-        const response = await fetch('http://ip-api.com/json/');
-        if (!response.ok) throw new Error('ip-api response was not ok');
+        const response = await fetch('https://purgapw-ipinfo-proxy.xieyehanta.workers.dev/');
+        if (!response.ok) throw new Error('Proxy response was not ok');
+
         const data = await response.json();
 
-        ipElement.textContent = `${data.query} [${data.countryCode}]`;
+        ipElement.textContent = `${data.ip} [${data.country_code}]`;
 
-    } catch (primaryError) {
-        console.warn("Primary API failed, trying fallback...", primaryError.message);
-
-        try {
-            // Fallback: geoiplookup.io
-            const fallbackResponse = await fetch('https://geoiplookup.io/api');
-            if (!fallbackResponse.ok) throw new Error('geoiplookup response was not ok');
-            const fallbackData = await fallbackResponse.json();
-
-            ipElement.textContent = `${fallbackData.ip} [${fallbackData.country_code}]`;
-
-        } catch (fallbackError) {
-            console.error("All IP lookups failed (likely blocked by privacy extensions or mixed-content rules):", fallbackError.message);
-            ipElement.textContent = "FAILED [BLOCKED/LOCAL]";
-            ipElement.style.color = "#ff4444";
-        }
+    } catch (error) {
+        console.error("IP lookup failed (network error or blocked):", error.message);
+        ipElement.textContent = "FAILED [BLOCKED/LOCAL]";
+        ipElement.style.color = "#ff4444";
     }
 }
 document.addEventListener("DOMContentLoaded", fetchIPData);
